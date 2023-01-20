@@ -1,107 +1,84 @@
-# This repo is no longer maintained. Consider using `npm init vite` and selecting the `svelte` option or  if you want a full-fledged app framework and don't mind using pre-1.0 software  use [SvelteKit](https://kit.svelte.dev), the official application framework for Svelte.
+<h3>Demo</h3>
+[REPL](https://svelte.dev/repl/7d3cfaadb28c4f1e9324762c614ff440?version=3.55.1)
 
----
+<h2>Standalone Table/Spreadsheet front end</h2>
 
-# svelte app
+<p>This is a spreadsheet front end only. You need to implement calcs yourself. You also need to supply a 2D array of cell values &amp; formats. This REPL has an example of all that.</p>
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+<p>Try dbl clicking (or hit Enter/F2)  on a cell to edit. Or select some with mouse or keyboard.</p>
+<p>The buttons show how easy it is to format a cell or display something other than the raw cell value eg a currency.</p>
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+<h3>Features</h3>
+<ul>
+	<li>Cells are editable. F2 or = or Enter or just type alpha-numerics, or DblClick</li>
+	<li>Cells each have their own format</li>
+	<li>Each cell supports attributes for borders x 4, italics, bold, font-size, bg & fg colours. Other attributes can easily be added.</li>
+	<li>Read Only cells supported</li>
+	<li>Keyboard nav using Home,End, Arrows</li>
+	<li>Ctrl+nav key moves to next full/empty cell boundary</li>
+	<li>Select cells with mouse or shift+nav keys</li>
+	<li>Tab/BackTab moves through selected cells</li>
+	<li>Supports 3 cell data values... just like a spreadsheet.
+		<ul>
+			<li>cell.value is the raw content that the user enters</li>
+			<li>cell.result is the result of any calc you may implement</li>
+			<li>cell.display is what gets displayed. So setting cell.value will show nothing - you need to do a calc and populate cell.result/display or just copy cell.value to cell.display. Or make your own Formatter that takes cell.value/result and puts e.g. a currency/date string into cell.display
+				</li>
+				</ul>
+			</li>
+	<li>Row/Col select with mouse (+shift for multiple)</li>
+	<li>Row/Col resize with mouse. (Can be disabled in config)</li>
+	<li>^A selects all, so does click at top left</li>
+	<li>Del deletes selected cells</li>
+	<li>Rows/Cols can be added dynamically. data[ ] [ ] must be extended too!</li>
+	<li>Copy/del/paste ^C ^X ^V using clipboard. (Some caveats apply!)</li>
+	<li>Navigation scrolls the newly selected cell into view</li>
+	<li>Edit of cell is highly visible</li>
+	<li>Various user actions can be allowed/denied at the Table level. See <pre>allowedActions="EDIT RESIZE FORMAT DELETE COPY PASTE NAVIGATE"</pre></li>
+	<li>Only 3 events that are dispatched are 
+	<pre>
+ onselchange(selectedCells) - when the user navigates somewhere
+ startedit(selectedCells) - before the user edits a cell
+ onendedit(selectedCells) - when the user changes a cells value
+	</pre>
+	Adding more for e.g. row/col resize would be straightforward</li>
+	<li>Supports lots of row/cols with scrolling. Only limited by DOM and memory</li>
+	<li>Compact data requirements. Config &amp; Data are easily JSONable.</li>
+	<li>Multiple Tables can be in DOM at same time</li>
+	<li>No dependencies - approx 1100 LOC inc styling</li>
+</ul>
+<h3>Usage</h3>
+<p>Needs only 3 params - config, data (2D array) and a uid.</p>
+<p>Two optional params - title (useful when displaying multiple Tables) and allowedActions (see above) - default is all allowed</p>
+<p>defaultGridConfig is the default config. It contains row &amp; column initial configs sizings. It's self explanatory - see utils.js</p>
+<p>data[ ][ ] is a 2D array of cell object. Each cell object looks like 
+	<pre>
+ let cell = {'{'}
+    value:'', // raw string. Often what is entered by the user.
+    display:'', // what is displayed often isn't the same as the value. E.G. formulas, 12=>$12.00, -12=>($12.00). It is the parents responsibility to populate this
+    result:'', // the result of a formula or just the value as a string/number
+    format:JSON.parse(JSON.stringify(defaultCellFormat)),
+ };	
+	</pre>
+Each cell has its' own format. The format object looks like -
+<pre>
+ const defaultCellFormat = {'{'}
+  "italics":  0,
+  "bold":     0,
+  "underline":0,
+  "fontsize": 13,
+  "align":    "left",
+  "colour":   "#888",
+  "background": "#fff",
+  "border":   [false,false,false,false],				//	TLBR
+  "readonly": false,
+   displayFormat:'NUMBER2',							//	DATE,TIME, DURATION, CURRENCY2, CURRENCY, TEXT, NUMBER, NUMBER2
+}
+</pre>
+Again, it's self explanatory, and straightforward to extend.
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
+<h3>Notes</h3>
+<p>In production uncomment the .focus() in onMount() of Table.svelte. It's highly irritating to keep having the focus ripped away when testing in this REPL.</p>
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
-
-## Get started
-
-Install the dependencies...
-
-```bash
-cd svelte-app
-npm install
-```
-
-...then start [Rollup](https://rollupjs.org):
-
-```bash
-npm run dev
-```
-
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
-
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
-
-If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
-
-## Building and running in production mode
-
-To create an optimised version of the app:
-
-```bash
-npm run build
-```
-
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
-
-
-## Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
-```
-
-## Using TypeScript
-
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
-
-```bash
-node scripts/setupTypeScript.js
-```
-
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
-```
-
-If you want to use `baseUrl` or `path` aliases within your `tsconfig`, you need to set up `@rollup/plugin-alias` to tell Rollup to resolve the aliases. For more info, see [this StackOverflow question](https://stackoverflow.com/questions/63427935/setup-tsconfig-path-in-svelte).
-
-## Deploying to the web
-
-### With [Vercel](https://vercel.com)
-
-Install `vercel` if you haven't already:
-
-```bash
-npm install -g vercel
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-vercel deploy --name my-project
-```
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public my-project.surge.sh
-```
+<h3>Licence</h3>
+MIT
