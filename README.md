@@ -53,7 +53,7 @@
 <p>defaultGridConfig is the default config. It contains row &amp; column initial configs sizings. It's self explanatory - see utils.js</p>
 <p>data[ ][ ] is a 2D array of cell object. Each cell object looks like 
 	<pre>
- let cell = {'{'}
+ let cell = {
     value:'', // raw string. Often what is entered by the user.
     display:'', // what is displayed often isn't the same as the value. E.G. formulas, 12=>$12.00, -12=>($12.00). It is the parents responsibility to populate this
     result:'', // the result of a formula or just the value as a string/number
@@ -62,7 +62,7 @@
 	</pre>
 Each cell has its' own format. The format object looks like -
 <pre>
- const defaultCellFormat = {'{'}
+ const defaultCellFormat = {
   "italics":  0,
   "bold":     0,
   "underline":0,
@@ -70,9 +70,8 @@ Each cell has its' own format. The format object looks like -
   "align":    "left",
   "colour":   "#888",
   "background": "#fff",
-  "border":   [false,false,false,false],				//	TLBR
+  "border":   [false,false,false,false],  //	TLBR
   "readonly": false,
-   displayFormat:'NUMBER2',							//	DATE,TIME, DURATION, CURRENCY2, CURRENCY, TEXT, NUMBER, NUMBER2
 }
 </pre>
 Again, it's self explanatory, and straightforward to extend.
