@@ -1,9 +1,9 @@
 <h3>Demo</h3>
 [REPL](https://svelte.dev/repl/7d3cfaadb28c4f1e9324762c614ff440?version=3.55.1)
 
-<h2>Standalone Table/Spreadsheet front end</h2>
+<h2>Svelte Standalone Table/Spreadsheet front end</h2>
 
-<p>This is a spreadsheet front end only. You need to implement calcs yourself. You also need to supply a 2D array of cell values &amp; formats. This REPL has an example of all that.</p>
+<p>This is a spreadsheet front end written using [Svelte](https://svelte.dev). You need to implement any calculations yourself. You also need to supply a 2D array of cell values &amp; formats along with a config for rows &amp; columns info. The REPL has an example of all that.</p>
 
 <p>Try dbl clicking (or hit Enter/F2)  on a cell to edit. Or select some with mouse or keyboard.</p>
 <p>The buttons show how easy it is to format a cell or display something other than the raw cell value eg a currency.</p>
@@ -77,7 +77,7 @@ Each cell has its' own format. The format object looks like -
 Again, it's self explanatory, and straightforward to extend.
 
 <h3>Notes</h3>
-<p>In production uncomment the .focus() in onMount() of Table.svelte. It's highly irritating to keep having the focus ripped away when testing in this REPL.</p>
+<p>In production uncomment the .focus() in onMount() of Table.svelte. It's highly irritating to keep having the focus ripped away when testing in the REPL.</p>
 
 <h3>Licence</h3>
 MIT
